@@ -7,9 +7,9 @@ describe('First test suite', () => {
     
     it('first test', () => {
 
-        cy.visit('/')///нужно открыть сайт, baseUrl is assigned before in cypress.config.js
-        cy.contains('Forms').click()// найти кнопку Forms (by text)нажать на неё и 
-        cy.contains('Form Layouts').click()//очутиться на curtain странице
+        cy.visit('/')
+        cy.contains('Forms').click()/
+        cy.contains('Form Layouts').click()
 
         //by tag name
         cy.get('input')
@@ -56,11 +56,11 @@ describe('First test suite', () => {
         //cy.contains('nb-card', 'Horizontal form').get('button')//does not work, get will find all Sign in innoring first method(selectors)
         
         //cypress chain and DOM
-        //найдём сейчас checkbox опираясь на Input email (uniq el in window) 
+        
         cy.get('#inputEmail3')//Input email uniq
-            .parents('form')//затем поднимемся к родителям 
-            .find('button').should('contain', 'Sign in')//найдём кнопку Sign in, сделаем к ней assertion
-            .parents('form')//Затем опять идём к родителям 
+            .parents('form')
+            .find('button').should('contain', 'Sign in') 
+            .parents('form')
             .find('nb-checkbox').click()
 
     })
@@ -92,7 +92,7 @@ describe('First test suite', () => {
         cy.get('@usingTheGrid').find('[for="inputEmail1"]').should('contain', 'Email')
         cy.get('@usingTheGrid').find('[for="inputPassword2"]').should('contain', 'Password')
     
-        // 2 Cypress then() method (элемент превращается в JQuery, поэтому его нужно опять обернуть в Cypress (cy.wrap) чтобы работали методы find etc.обёртка работает в пределах одного теста только)
+        // 2 Cypress then() method  
         
         cy.contains('nb-card', 'Using the Grid').then(usingTheGridForm => {
             cy.wrap(usingTheGridForm).find('[for="inputEmail1"]').should('contain', 'Email')
@@ -112,8 +112,8 @@ describe('First test suite', () => {
 
             //2 extracting text by THEN(), TEXT() - JQuery method
             
-            cy.get('[for="exampleInputEmail1"]').then(label => {//обзываем наш объект label и потом вытягиваем из него текст
-                const labelText = label.text()//by method (JQuery) text() -  добываем текст и помещаем его в const
+            cy.get('[for="exampleInputEmail1"]').then(label => {
+                const labelText = label.text() 
                 expect(labelText).to.equal('Email address')//Chai using to Query - assertion
             
                 cy.wrap(labelText).should('contain', 'Email address')//wrap our object 
@@ -139,12 +139,12 @@ describe('First test suite', () => {
                 expect(classValue).to.equal('label col-sm-3 col-form-label')
             })
             
-            //5 invoke() PROPERTY - это значение которое мы вводим в поле
+            //5 invoke() PROPERTY - 
 
-            cy.get('#exampleInputEmail1').type('test@mail.ru')//текст впечатываем
-            cy.get('#exampleInputEmail1').invoke('prop', 'value')//извлекаем этот текст так как это property and it's value
+            cy.get('#exampleInputEmail1').type('test@mail.ru')/
+            cy.get('#exampleInputEmail1').invoke('prop', 'value')
                 .should('contain', 'test@mail.ru')
-                .then(property => {//делаем assertion to check property
+                .then(property => {
                     expect(property).to.equal('test@mail.ru')
                 })
             })
@@ -216,24 +216,24 @@ describe('First test suite', () => {
             let date = new Date()//give us current date and time(according to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getDate
         date.setDate(date.getDate() + day)//data + 10 days -  we set up
         let futureDay = date.getDate()//assigned initial date to new var futureDate
-        let futureMonth = date.toLocaleDateString('en-US', {month: "short"})//переменная с методом toLocaleDateStringдаёт нам нужный месяц
-        let futureYear = date.getFullYear()//переменная с методом getFullYear даёт нам нужный year
+        let futureMonth = date.toLocaleDateString('en-US', {month: "short"})
+        let futureYear = date.getFullYear()
         
         let dateToCheck = `${futureMonth} ${futureDay}, ${futureYear}`//follow the format of result
-            cy.get('nb-calendar-navigation').invoke('attr', 'ng-reflect-date').then(dateAttr => {//выбираем свойства этого атрибута нашу полную дату
+            cy.get('nb-calendar-navigation').invoke('attr', 'ng-reflect-date').then(dateAttr => {
               
                 if(!dateAttr.includes(futureMonth) || !dateAttr.includes(futureYear)){//condition
-                  cy.get('[data-name="chevron-right"]').click()//То есть если заданный месяц и заданный год не присутствует в дате мы кликаем на стрелку
-                  selectDayFromCurrent(day)//после click функция должна повториться чтобы выбрать опять нужную дату
+                  cy.get('[data-name="chevron-right"]').click()
+                  selectDayFromCurrent(day)
                   } else {
-                       cy.get('.day-cell').not('.bounding-month').contains(futureDay).click()//а если все условия Нашлись то мы просто проверяем дату как в начале
+                       cy.get('.day-cell').not('.bounding-month').contains(futureDay).click()
                   }
   
              })   
 
              return dateToCheck//function return
         }   
-        //like console.log, где мы видим результат работы заданных параметров функции:    
+        //like console.log, 
         cy.visit('/')
         cy.contains('Forms').click()
         cy.contains('Datepicker').click()
@@ -241,7 +241,7 @@ describe('First test suite', () => {
         cy.contains('nb-card', 'Common Datepicker').find('input').then(input => {
             cy.wrap(input).click()  
            
-            const dateToCheck = selectDayFromCurrent(10)//function will be executed again. задали количество дней от текущей даты которая будет выбрана
+            const dateToCheck = selectDayFromCurrent(10)
             cy.wrap(input).invoke('prop', 'value').should('contain', dateToCheck)
             cy.wrap(input).should('have.value', dateToCheck)    
 
@@ -267,7 +267,7 @@ describe('First test suite', () => {
                 if( index < 3 ){
                     cy.wrap(dropDown).click()
                 }
-                //в этом loop each каждая сессия должна заканчиваться возвратом в начальное окно not more than 4 times
+                
         
            })
         })
@@ -351,15 +351,13 @@ describe('First test suite', () => {
 
         //this way works with single appeared window in a browser, not HTML page, not in the DOM
         cy.get('tbody tr').first().find('.nb-trash').click()//aftet that in Cypress appears: Are you sure you want to delete?
-        cy.on('window:confirm', (confirm) => {//код использует команду cy.on() для прослушивания
-            // события window:confirm, которое вызывается, когда встроенное диалоговое окно 
-            //подтверждения появляется в браузере.
+        cy.on('window:confirm', (confirm) => {
+            
+           
             expect(confirm).to.equal('Are you sure you want to delete?')
         })
 
-        //better way Код, использует библиотеку Sinon для создания stub (заглушки) и проверки,
-        // была ли функция window.confirm вызвана с определенным аргументом.
-        // В этом случае, это используется для проверки текста в диалоговом окне подтверждения.
+       
         const stub = cy.stub()
         cy.on('window:confirm', stub)
         cy.get('tbody tr').first().find('.nb-trash').click().then(() => {
